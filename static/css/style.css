@@ -1,0 +1,7 @@
+.counter{
+  border-radius: 30%;
+  background-color: #fba354;
+  padding: 0 5px;
+  position: absolute;
+  top: -.7rem; right: -.5rem;
+}

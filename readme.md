@@ -1,0 +1,1 @@
+this is a simple project that will help to advance the skill on javascript.
