@@ -75,11 +75,11 @@ body::before {
   text-align: end;
   padding-right: 2rem;
   padding-left: .5rem;
-  padding-top: .2rem;
   position: absolute;
   height: 2rem;
   bottom: .5rem; right: -100%;
   cursor: pointer;
+  border: none;
   transition: all .5s ease-in-out;
 }
 .custome-shopping-icon:hover{
