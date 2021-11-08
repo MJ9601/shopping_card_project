@@ -15,7 +15,7 @@
      <i class="fs-3 fa-solid fa-bars"></i>
      <a href="#" class="navbar-brand fs-3"><span class="text-warning">Com</span>fy shopping</a>
      <div class="position-relative">
-       <i class="fs-3 fa-solid fa-cart-plus"></i>
+       <i class="fs-3 fa-solid fa-cart-plus" id="cartIcon"></i>
       <span class="counter fw-bold fs-6">0</span>
      </div>
    </div>
@@ -37,47 +37,25 @@
          <h1 class="fs-2 my-3 text-warning">Our Product</h1>
        </div>
      </div>
-     <div class="row text-center my-4">
-       <div class="col-12 col-ms-6 col-md-4 col-lg-3">
-        <div class="card border-0 bg-transparent">
-          <div class="img-card img-container">
-            <img src="static/images/kaboompics_Grey long sofa with pillows.jpg" alt="" class="img-fluid">
-            <h1 class="fs-5 custome-shopping-icon"><i class="fa-solid fa-cart-plus"></i> ADD TO CART</h1>
-          </div>
-          <div class="card-body my-2">
-            <h1 class="fs-5 fw-bold">Couch</h1>
-            <h3 class="fs-6 text-warning">$ 10.99</h3>
-          </div>
-        </div>
-       </div>
+     <div class="row text-center my-4" id="productSectionRow">
      </div>
    </div>
  </section>
 
  <aside class="shopping-cart bg-light">
-   <i class="fa-solid fa-xmark text-dark fs-1 p-4 custome-xmark"></i>
+   <i class="fa-solid fa-xmark text-dark fs-1 p-4 custome-xmark" id="xmarkIcon"></i>
    <div class="container my-4">
-     <div class="row">
-       <div class="col-12">
-         <div class="card py-1 px-2 border-0">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-3">
-                <img src="static/images/kaboompics_Grey long sofa with pillows.jpg" alt="" class="img-fluid w-100">
-              </div>
-              <div class="col-6">
-                <h1 class="fs-4 my-0 fw-bold">Couch</h1>
-                <h2 class="fs-5 text-warning my-0">remove</h2>
-              </div>
-              <div class="col-2 offset-1">
-                <h1 class="custome-arrow fs-6 my-0 text-center"><i class="fa-solid fa-angle-up"></i></h1>
-                <h1 class="text-center fs-6 my-0">0</h1>
-                <h1 class="custome-arrow fs-6 my-0 text-center"><i class="fa-solid fa-angle-down"></i></h1>
+     
+     <div id="cartContainer">
+     </div>
 
-              </div>
-            </div>
-          </div>
-         </div>
+     <div class="row text-center my-5 py-5">
+       <div class="col-12">
+        <h1 class="fs-5">Total payment: <span class="text-warning"><span>10.99</span>$</span></h1>
+        <div class="d-inline text-center">
+          <button class="btn btn-warning my-3">Pay Now</button>
+          <button class="btn btn-danger my-3" id="emptyCart">Empty Cart</button>
+        </div>
        </div>
      </div>
    </div>

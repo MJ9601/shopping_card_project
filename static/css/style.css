@@ -3,6 +3,7 @@ body::before {
   content: "";
   height: 60px;
   display: block;
+  overflow: hidden;
 }
 .counter {
   border-radius: 30%;
@@ -17,7 +18,7 @@ body::before {
   position: relative;
   height: inherit;
   width: 100%;
-  background: url("../images/kaboompics_Luxury\ livingroom\ interior\ with\ table\,\ chairs\,\ commode\,\ poufs\,\ rug.jpg");
+  background: url("../images/banner_bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -40,7 +41,7 @@ body::before {
   width: 50%;
   margin: auto;
   justify-content: center;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 95px);
   text-align: center;
 }
 .hero h1, .hero p{
@@ -81,16 +82,25 @@ body::before {
   cursor: pointer;
   transition: all .5s ease-in-out;
 }
-
+.custome-shopping-icon:hover{
+  color: #000;
+}
 .img-container:hover .custome-shopping-icon{
   right: 0;
 }
 .shopping-cart{
-  position: absolute;
-  right: 0; top: 84px;
+  position: fixed;
+  right: -30rem; top: 84px;
   width: 30rem;
   height: 100%;
   z-index: 100;
+  transition: all .5s ease-in-out;
+  overflow-y: scroll;
+}
+.shopping-cart.active{
+  width: 30rem;
+  right: 0;
+  opacity: 1;
 }
 .custome-xmark{
   cursor: pointer;
@@ -102,6 +112,18 @@ body::before {
 .custome-arrow{
   cursor: pointer;
 }
+.remove-key{
+  cursor: pointer;
+}
+.remove-key:hover{
+  color: #ff0000 !important;
+}
 .custome-arrow:hover{
   color: #fba354;
+}
+#cartIcon{
+  cursor: pointer;
+}
+.shoppingItems{
+  position: relative;
 }
