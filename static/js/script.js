@@ -3,7 +3,7 @@ let cartContainer = document.querySelector("#cartContainer");
 let userCart = [];
 
 class ProductDeciphering {
-  async getProductById() {
+  async getProduct() {
     try {
       let data = await fetch("static/data/data.json");
       let initResults = await data.json();
@@ -22,9 +22,14 @@ class ProductDeciphering {
 }
 
 class UI {
-  addItemsToProductSection(product){
-    let productSectionFirstDiv = document.createElement('div');
-    productSectionFirstDiv.classList.add('col-12', 'col-ms-6', 'col-md-4', 'col-lg-3');
+  addItemsToProductSection(product) {
+    let productSectionFirstDiv = document.createElement("div");
+    productSectionFirstDiv.classList.add(
+      "col-12",
+      "col-ms-6",
+      "col-md-4",
+      "col-lg-3"
+    );
     productSectionFirstDiv.innerHTML = `
           <div class="card border-0 bg-transparent">
             <div class="img-card img-container">
@@ -37,29 +42,29 @@ class UI {
             </div>
           </div>
     `;
-    document.querySelector("#productSectionRow").appendChild(productSectionFirstDiv);
+    document
+      .querySelector("#productSectionRow")
+      .appendChild(productSectionFirstDiv);
   }
-  addingItemToCartFromProductSection(){
-    const addToCartBtns = [...document.querySelectorAll('.custome-shopping-icon')];
-    addToCartBtns.forEach(btn => {
+  addingItemToCartFromProductSection() {
+    const addToCartBtns = [
+      ...document.querySelectorAll(".custome-shopping-icon"),
+    ];
+    addToCartBtns.forEach((btn) => {
       let productId = btn.dataset.id;
-      let inCartBtn = userCart.find(item => item.id === productId);
-      if (inCartBtn) {
-        btn.innerText = "IN CART";
-        btn.disabled = true;
-      }
-      btn.addEventListener('click', (event) =>{
-        event.target.innerText = "IN CART";
-        event.target.disabled = true;
-        let productDetails = Storage.getProductById(productId);
-        Storage.userProducts(productDetails);
-        UI.updatingUserCartDisplayAndIcon();
+      btn.addEventListener("click", () => {
+        this.addingProductToUserCartById(productId);
+        this.updatingUserCartDisplayAndIcon();
       });
-      
     });
-
   }
-  static addItemsToShoppingCart(product, counter) {
+
+  addingProductToUserCartById(productId){
+    let productDetails = Storage.getProductById(productId);
+    Storage.userProducts(productDetails);
+  }
+
+  addItemsToShoppingCart(product, counter) {
     let shoppingFirstDiv = document.createElement("div");
     shoppingFirstDiv.classList.add("row", "shoppingItems", "my-2");
     shoppingFirstDiv.innerHTML = `
@@ -67,15 +72,15 @@ class UI {
         <div class="card py-1 px-2 border-0">
           <div class="card-body">
             <div class="row">
-              <div class="col-3">
-                <img src=${product.image} alt="" class="img-fluid w-100">
+              <div class="col-3 ">
+                <img src=${product.image} alt="" class="img-fluid w-75">
               </div>
-              <div class="col-6">
+              <div class="col-6 ">
                 <h1 class="fs-5 my-0 ">${product.title}</h1>
                 <h1 class="fs-6 text-warning my-0">${product.price} $</h1>
                 <h2 class="fs-5 text-secondary remove-key my-0" data-id=${product.id}>remove</h2>
               </div>
-              <div class="col-2 offset-1">
+              <div class="col-2 offset-1 ">
                 <h1 class="custome-arrow fs-6 my-0 text-center"><i class="fa-solid fa-angle-up" data-id=${product.id}></i></h1>
                 <h1 class="text-center fs-6 my-0">${counter}</h1>
                 <h1 class="custome-arrow fs-6 my-0 text-center"><i class="fa-solid fa-angle-down" data-id=${product.id}></i></h1>
@@ -88,46 +93,71 @@ class UI {
     cartContainer.appendChild(shoppingFirstDiv);
     shoppingCart.classList.add("active");
   }
-  openCartWithUserCartBtn(){
+  openCartWithUserCartBtn() {
     document.querySelector("#cartIcon").addEventListener("click", () => {
       shoppingCart.classList.add("active");
     });
   }
-  closeCartWithXmarkBtn(){
+  closeCartWithXmarkBtn() {
     document.querySelector("#xmarkIcon").addEventListener("click", () => {
       shoppingCart.classList.remove("active");
     });
   }
 
-  clearCartWithEmptyBtn(){
+  clearCartWithEmptyBtn() {
     document.querySelector("#emptyCart").addEventListener("click", () => {
       document.querySelectorAll(".row.shoppingItems").forEach((element) => {
-        element.innerHTML = "";
-      });
-
-      const removefromCartBtns = [
-        ...document.querySelectorAll(".custome-shopping-icon"),
-      ];
-      removefromCartBtns.forEach((btn) => {
-        btn.innerHTML = `<i class="fa-solid fa-cart-plus" ></i> ADD TO CART`;
-        btn.disabled = false;
+        element.remove();
       });
 
       Storage.clearUserCart();
-      document.querySelector("#totalPrice").innerText = `0`;
       shoppingCart.classList.remove("active");
-      document.querySelector('.counter').innerText = 0;
+      this.updatingUserCartDisplayAndIcon();
     });
   }
+  updatingCardDataWithinCardBtns() {
+    cartContainer.addEventListener("click", (event) => {
+      if (event.target.classList.contains('remove-key')) {
+        let removedItem = event.target;
+        let removedItemId = removedItem.dataset.id;
+        let removedProduct = Storage.getProductById(removedItemId)
+        Storage.removeAllOfOneProductFromUserCart(removedProduct);
+        this.updatingUserCartDisplayAndIcon();
 
-  static updatingUserCartDisplayAndIcon(){
-    document.querySelectorAll(".row.shoppingItems").forEach((element) => {
-      element.innerHTML = "";
+      }else if (event.target.classList.contains("fa-angle-up")) {
+        let increaseItem = event.target;
+        let increaseItemId = increaseItem.dataset.id;
+        this.addingProductToUserCartById(increaseItemId);
+        this.updatingUserCartDisplayAndIcon();
+
+      } else if (event.target.classList.contains("fa-angle-down")) {
+        let decreaseItem = event.target;
+        let decreaseItemId = decreaseItem.dataset.id;
+        this.removeSpecificItemFromUserCart(decreaseItemId);
+        this.updatingUserCartDisplayAndIcon();
+      }
     });
+  }
+removeSpecificItemFromUserCart(productId){
+  let userCart = Storage.getUserCart() || [];
+  console.log(userCart);
+  for (let index = 0; index < userCart.length; index++) {
+    if (userCart[index].id === productId) {
+      userCart.splice(index, 1);
+      break;
+    }
+  }
+  Storage.userProductAll(userCart);
+}
+  updatingUserCartDisplayAndIcon() {
+    document.querySelectorAll(".row.shoppingItems").forEach((element) => {
+      element.remove();
+    });
+    // updating card Icon value 
     userCart = Storage.getUserCart();
     document.querySelector(".counter").innerText = userCart.length;
     let elementIds = [];
-    userCart.forEach(element => elementIds.push(element.id));
+    userCart.forEach((element) => elementIds.push(element.id));
     const counts = elementIds.reduce(
       (acc, value) => ({
         ...acc,
@@ -135,22 +165,40 @@ class UI {
       }),
       {}
     );
-    for (const [key, value] of Object.entries(counts)){
+      //  updating product in cart and cart number of product
+    for (const [key, value] of Object.entries(counts)) {
       let product = Storage.getProductById(key);
-      UI.addItemsToShoppingCart(product, value);
+      this.addItemsToShoppingCart(product, value);
     }
+    
+    // updating Buttons
+    const updatingShoppingListBtns = [
+      ...document.querySelectorAll(".custome-shopping-icon"),
+    ];
+    let userProductIds = Object.keys(counts);
+    updatingShoppingListBtns.forEach((btn) => {
+      if (!userProductIds.includes(btn.dataset.id)) {
+        btn.innerHTML = `<i class="fa-solid fa-cart-plus" ></i> ADD TO CART`;
+        btn.disabled = false;
+      } else {
+        btn.innerHTML = `IN CARD`;
+        btn.disabled = true;
+      }
+    });
+
+    // updating total price
     let totalPrice = 0;
     userCart.forEach((element) => {
       totalPrice += element.price;
     });
-    document.querySelector("#totalPrice").innerText = `${totalPrice}`;
+    document.querySelector("#totalPrice").innerText = totalPrice.toFixed(2);
   }
-  removingItemsWithRemoveBtn(){
-    document.querySelectorAll('.remove-key').forEach(removeKey =>{
-      removeKey.addEventListener('click', () => {
-        console.log(removeKey.dataset.id);
-      });
-    });
+  cartAndStorageFunctionality(){
+    this.addingItemToCartFromProductSection();
+    this.openCartWithUserCartBtn();
+    this.closeCartWithXmarkBtn();
+    this.clearCartWithEmptyBtn();
+    this.updatingCardDataWithinCardBtns();
   }
 }
 
@@ -170,15 +218,24 @@ class Storage{
     UserProducts.push(product);
     localStorage.setItem('userProducts', JSON.stringify(UserProducts));
   }
+  static userProductAll(userCart){
+    localStorage.setItem("userProducts", JSON.stringify(userCart));
+  }
   static clearUserCart(){
     localStorage.setItem('userProducts', JSON.stringify([]));
   }
   static getUserCart(){
-    return JSON.parse(localStorage.getItem('userProducts'));
+    return localStorage.getItem('userProducts') ? JSON.parse(localStorage.getItem('userProducts')): [];
   }
-  static removeProductFromUserCartById(productId){
-    let products = JSON.parse(localStorage.getItem('userProduct'));
-    
+  static removeAllOfOneProductFromUserCart(product){
+    let products = JSON.parse(localStorage.getItem('userProducts'));
+    let updatedUserProduct = [];
+    products.forEach( element => {
+      if (element.id !== product.id) {
+        updatedUserProduct.push(element);
+      }
+    })
+    localStorage.setItem('userProducts', JSON.stringify(updatedUserProduct));
   }
 }
 
@@ -190,22 +247,15 @@ window.addEventListener("DOMContentLoaded", () => {
   const ui = new UI();
   const products = new ProductDeciphering();
 
-  products.getProductById().then(products => {
+  products.getProduct().then(products => {
     products.forEach(product => {
       ui.addItemsToProductSection(product);
     });
     Storage.allProduct(products);
-    UI.updatingUserCartDisplayAndIcon();
+    ui.updatingUserCartDisplayAndIcon();
   }).then( () => {
-    ui.addingItemToCartFromProductSection();
-    ui.openCartWithUserCartBtn();
-    ui.closeCartWithXmarkBtn();
-    ui.clearCartWithEmptyBtn();
-    ui.removingItemsWithRemoveBtn();
-    
 
-
-
+    ui.cartAndStorageFunctionality();
     window.onscroll = () => {
       let shoppingCartClassList = Object.values(shoppingCart.classList);
       if (shoppingCartClassList.includes("active")) {
@@ -213,14 +263,11 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     };
   }).then( () => {
-    
+
   });
 });
 
-// document.querySelector("#addingToCartIcon").addEventListener("click", () => {
-//   shoppingCart.classList.add("active");
-//   ui.addItemsToShoppingCart();
-// });
+
 
 
 
